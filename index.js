@@ -29,3 +29,16 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+app.get('/route', async (req, res) => {
+  const { startLat, startLng, endLat, endLng } = req.query;
+  try {
+    const route = await getRoute(
+      { lat: startLat, lng: startLng },
+      { lat: endLat, lng: endLng }
+    );
+    res.json(route);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch route' });
+  }
+});
