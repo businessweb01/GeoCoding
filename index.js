@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { geocodeLocation, autocompleteLocation } from './locationService.js'; // Adjust path if needed
+import { geocodeLocation, autocompleteLocation } from './geoCoding.js'; // Adjust path if needed
 
 const app = express();
 app.use(cors());
