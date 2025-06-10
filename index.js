@@ -16,14 +16,15 @@ app.get('/geocode', async (req, res) => {
 });
 
 app.get('/autocomplete', async (req, res) => {
+  const { q } = req.query;
   try {
-    const { q } = req.query;
-    const suggestions = await autocompleteLocation(q);
-    res.json(suggestions);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    const results = await autocompleteLocation(q);
+    res.json(results);
+  } catch (error) {
+    res.status(500).json({ error: 'Autocomplete failed' });
   }
 });
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
