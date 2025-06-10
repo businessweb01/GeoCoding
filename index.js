@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { geocodeLocation, autocompleteLocation } from './geoCoding.js'; // Adjust path if needed
+import { geocodeLocation, autocompleteLocation, getRoute } from './geoCoding.js'; // Added getRoute import
 
 const app = express();
 app.use(cors());
@@ -25,12 +25,13 @@ app.get('/autocomplete', async (req, res) => {
   }
 });
 
+// Move route endpoint BEFORE app.listen()
 app.get('/route', async (req, res) => {
   const { startLat, startLng, endLat, endLng } = req.query;
   try {
     const route = await getRoute(
-      { lat: startLat, lng: startLng },
-      { lat: endLat, lng: endLng }
+      { lat: parseFloat(startLat), lng: parseFloat(startLng) },
+      { lat: parseFloat(endLat), lng: parseFloat(endLng) }
     );
     res.json(route);
   } catch (err) {
@@ -42,4 +43,3 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
-
