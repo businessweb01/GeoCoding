@@ -25,12 +25,6 @@ app.get('/autocomplete', async (req, res) => {
   }
 });
 
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
-
 app.get('/route', async (req, res) => {
   const { startLat, startLng, endLat, endLng } = req.query;
   try {
@@ -43,3 +37,9 @@ app.get('/route', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch route' });
   }
 });
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
+
