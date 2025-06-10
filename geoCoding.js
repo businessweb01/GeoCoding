@@ -43,3 +43,23 @@ export async function autocompleteLocation(query) {
     throw error;
   }
 }
+export async function getRoute(start, end) {
+  const token = process.env.LOCATIONIQ_TOKEN;
+  const url = `https://us1.locationiq.com/v1/directions/driving/${start.lng},${start.lat};${end.lng},${end.lat}?key=${token}&overview=full&geometries=geojson`;
+
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+
+    const coordinates = data.routes[0].geometry.coordinates.map(([lng, lat]) => ({
+      latitude: lat,
+      longitude: lng
+    }));
+
+    return coordinates;
+  } catch (error) {
+    console.error('Route fetch failed:', error);
+    throw error;
+  }
+}
+
