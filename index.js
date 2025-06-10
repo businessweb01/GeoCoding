@@ -1,31 +1,31 @@
 import express from 'express';
-import dotenv from 'dotenv';
 import cors from 'cors';
-import { geocodeLocation } from './geoCoding.js';
-
-dotenv.config();
+import { geocodeLocation, autocompleteLocation } from './locationService.js'; // Adjust path if needed
 
 const app = express();
-const PORT = process.env.PORT || 5000;
-
 app.use(cors());
-app.use(express.json());
 
-app.post('/geocode', async (req, res) => {
-  const { address } = req.body;
-
-  if (!address) {
-    return res.status(400).json({ error: 'Address is required' });
-  }
-
+app.get('/geocode', async (req, res) => {
   try {
-    const result = await geocodeLocation(address);
-    res.json(result);
-  } catch (error) {
-    res.status(500).json({ error: error.message || 'Geocoding failed' });
+    const { q } = req.query;
+    const location = await geocodeLocation(q);
+    res.json(location);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 
+app.get('/autocomplete', async (req, res) => {
+  try {
+    const { q } = req.query;
+    const suggestions = await autocompleteLocation(q);
+    res.json(suggestions);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
