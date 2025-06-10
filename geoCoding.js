@@ -27,22 +27,26 @@ export async function geocodeLocation(address) {
 }
 
 export async function autocompleteLocation(query) {
-  const url = `https://us1.locationiq.com/v1/autocomplete?key=${token}&q=${encodeURIComponent(query)}&format=json`;
+  const token = process.env.LOCATIONIQ_TOKEN;
+  const url = `https://us1.locationiq.com/v1/autocomplete.php?key=${token}&q=${encodeURIComponent(query)}&format=json`;
 
   try {
     const response = await fetch(url);
     const data = await response.json();
 
     if (!Array.isArray(data)) {
+      console.error('LocationIQ autocomplete API returned:', data);
       throw new Error('Autocomplete response is not an array');
     }
 
-    return data; // return full suggestion list
+    return data;
   } catch (error) {
     console.error('Autocomplete failed:', error);
     throw error;
   }
 }
+
+
 export async function getRoute(start, end) {
   const token = process.env.LOCATIONIQ_TOKEN;
   const url = `https://us1.locationiq.com/v1/directions/driving/${start.lng},${start.lat};${end.lng},${end.lat}?key=${token}&overview=full&geometries=geojson`;
